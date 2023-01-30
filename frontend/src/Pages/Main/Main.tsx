@@ -1,4 +1,7 @@
+import styled from 'styled-components';
+import Webcam from './components/cam';
+
 const Main = () => {
-  return <div>안녕하세요 메인 화면입니다.</div>;
+  return <Webcam></Webcam>;
 };
 export default Main;
