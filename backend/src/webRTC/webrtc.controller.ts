@@ -5,5 +5,7 @@ import { WebRTCGateway } from './webrtc.gateway';
 export class WebRTCController {
   constructor(private readonly webRTCGateway: WebRTCGateway) {}
   @Get('webrtc')
-  root() {}
+  root() {
+    console.log('root 진입');
+  }
 }
