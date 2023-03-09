@@ -1,25 +1,34 @@
 import React, { useState, useEffect } from "react";
 function Chat() {
-  const [socket, setSocket] = useState(null);
+  const [socket, setSocket] = useState<WebSocket | null>(null);
   const [message, setMessage] = useState([]);
   useEffect(() => {
-    const newSocket = new WebSocket("ws://localhost:4000");
-    newSocket.addEventListener("open", (event) => {
-      console.log("Websocket Connect");
-    });
-    newSocket.addEventListener("message", (e) => {
-      const msg = JSON.parse(e.data);
-      console.log(msg);
-    });
-    newSocket.addEventListener("error", (e) => {
-      console.error("WebSocket Error", e);
-    });
-    newSocket.addEventListener("close", (e) => {
-      console.log("WebScoket is disconnected");
-    });
-    setSocket(newSocket);
-    return () => {
-      newSocket.close();
-    };
+    const ws = new WebSocket("ws://localhost:8080");
+    setSocket(ws);
   }, []);
+  useEffect(() => {
+    if (socket) {
+      console.log(socket);
+      socket.onopen = () => {
+        console.log("Websocket connected");
+      };
+      socket.onmessage = (event) => {
+        console.log("Received Message: ", event.data);
+      };
+      socket.onclose = (event) => {
+        console.log("Websocket is Closed");
+      };
+    }
+  }, [socket]);
+  const sendMessage = () => {
+    if (socket) {
+      socket.send("Hello, WebSocket!");
+    }
+  };
+  return (
+    <div>
+      <button onClick={sendMessage}>sendMessage</button>
+    </div>
+  );
 }
+export default Chat;
