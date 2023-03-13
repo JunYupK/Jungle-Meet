@@ -3,17 +3,21 @@ import { io, Socket } from "socket.io-client";
 function Chat() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [message, setMessage] = useState([]);
+
   useEffect(() => {
-    const ws = io("http://localhost:4001", { transports: ["websocket"] });
+    const ws = io("ws://localhost:4001", {
+      transports: ["websocket"],
+    });
     setSocket(ws);
 
-    return () => {
-      ws.disconnect();
-    };
+    // return () => {
+    //   ws.disconnect();
+    // };
   }, []);
   const sendMessage = () => {
     if (socket) {
       socket.emit("message", "hello, WebSocket");
+      console.log(socket);
     }
   };
   return (
