@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { io, Socket } from 'socket.io-client';
+import { useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
+import { io, Socket } from "socket.io-client";
 const VideoCall = () => {
   const socketRef = useRef<Socket>();
   const myVideoRef = useRef<HTMLVideoElement>(null);
@@ -34,8 +34,8 @@ const VideoCall = () => {
           if (!socketRef.current) {
             return;
           }
-          console.log('recv candidate');
-          socketRef.current.emit('candidate', e.candidate, roomName);
+          console.log("recv candidate");
+          socketRef.current.emit("candidate", e.candidate, roomName);
         }
       };
 
@@ -50,22 +50,22 @@ const VideoCall = () => {
   };
 
   const createOffer = async () => {
-    console.log('create Offer');
+    console.log("create Offer");
     if (!(pcRef.current && socketRef.current)) {
       return;
     }
     try {
       const sdp = await pcRef.current.createOffer();
       pcRef.current.setLocalDescription(sdp);
-      console.log('sent the offer');
-      socketRef.current.emit('offer', sdp, roomName);
+      console.log("sent the offer");
+      socketRef.current.emit("offer", sdp, roomName);
     } catch (e) {
       console.error(e);
     }
   };
 
   const createAnswer = async (sdp: RTCSessionDescription) => {
-    console.log('createAnswer');
+    console.log("createAnswer");
     if (!(pcRef.current && socketRef.current)) {
       return;
     }
@@ -75,44 +75,44 @@ const VideoCall = () => {
       const answerSdp = await pcRef.current.createAnswer();
       pcRef.current.setLocalDescription(answerSdp);
 
-      console.log('sent the answer');
-      socketRef.current.emit('answer', answerSdp, roomName);
+      console.log("sent the answer");
+      socketRef.current.emit("answer", answerSdp, roomName);
     } catch (e) {
       console.error(e);
     }
   };
 
   useEffect(() => {
-    socketRef.current = io('localhost:4000/webrtc');
+    socketRef.current = io("localhost:8080");
 
     pcRef.current = new RTCPeerConnection({
       iceServers: [
         {
-          urls: 'stun:stun.l.google.com:19302',
+          urls: "stun:stun.l.google.com:19302",
         },
       ],
     });
 
-    socketRef.current.on('all_users', (allUsers: Array<{ id: string }>) => {
+    socketRef.current.on("all_users", (allUsers: Array<{ id: string }>) => {
       if (allUsers.length > 0) {
         createOffer();
       }
     });
 
-    socketRef.current.on('getOffer', (sdp: RTCSessionDescription) => {
-      console.log('recv Offer');
+    socketRef.current.on("getOffer", (sdp: RTCSessionDescription) => {
+      console.log("recv Offer");
       createAnswer(sdp);
     });
 
-    socketRef.current.on('getAnswer', (sdp: RTCSessionDescription) => {
-      console.log('recv Answer');
+    socketRef.current.on("getAnswer", (sdp: RTCSessionDescription) => {
+      console.log("recv Answer");
       if (!pcRef.current) {
         return;
       }
       pcRef.current.setRemoteDescription(sdp);
     });
 
-    socketRef.current.on('getCandidate', async (candidate: RTCIceCandidate) => {
+    socketRef.current.on("getCandidate", async (candidate: RTCIceCandidate) => {
       if (!pcRef.current) {
         return;
       }
@@ -120,7 +120,7 @@ const VideoCall = () => {
       await pcRef.current.addIceCandidate(candidate);
     });
 
-    socketRef.current.emit('join_room', {
+    socketRef.current.emit("join_room", {
       room: roomName,
     });
 
@@ -143,7 +143,7 @@ const VideoCall = () => {
         style={{
           width: 240,
           height: 240,
-          backgroundColor: 'black',
+          backgroundColor: "black",
         }}
         ref={myVideoRef}
         autoPlay
@@ -153,7 +153,7 @@ const VideoCall = () => {
         style={{
           width: 240,
           height: 240,
-          backgroundColor: 'black',
+          backgroundColor: "black",
         }}
         ref={remoteVideoRef}
         autoPlay
