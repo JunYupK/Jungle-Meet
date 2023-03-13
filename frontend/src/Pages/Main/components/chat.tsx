@@ -4,8 +4,12 @@ function Chat() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [message, setMessage] = useState([]);
   useEffect(() => {
-    const ws = io("ws://localhost:8080");
+    const ws = io("http://localhost:4001", { transports: ["websocket"] });
     setSocket(ws);
+
+    return () => {
+      ws.disconnect();
+    };
   }, []);
   const sendMessage = () => {
     if (socket) {

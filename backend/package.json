@@ -26,6 +26,7 @@
     "@nestjs/platform-socket.io": "^9.3.9",
     "@nestjs/platform-ws": "^9.3.9",
     "@nestjs/websockets": "^9.3.9",
+    "install": "^0.13.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "simple-peer": "^9.11.1",
